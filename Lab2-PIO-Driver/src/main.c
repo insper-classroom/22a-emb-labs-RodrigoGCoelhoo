@@ -246,7 +246,7 @@ uint32_t _pio_get(Pio *p_pio, const pio_type_t ul_type,
 	}
 }
 
-_delay_ms(int ms){
+void _delay_ms(int ms){
 	//arm clock 300.000
 	//bus clock 150.000
 	for (int i = 0; i < 150000*ms; i++){
