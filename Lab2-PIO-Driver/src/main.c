@@ -203,12 +203,47 @@ void _pio_set_output(Pio *p_pio, const uint32_t ul_mask,
 	
 	if (ul_multidrive_enable){
 		p_pio->PIO_MDER = ul_mask;
-		} else {
+	} 
+	else {
 		p_pio->PIO_MDDR = ul_mask;
 	}
 	
 	pio_pull_up(p_pio, ul_mask, ul_pull_up_enable);
 	
+}
+
+/**
+ * \brief Return 1 if one or more PIOs of the given Pin instance currently have
+ * a high level; otherwise returns 0. This method returns the actual value that
+ * is being read on the pin. To return the supposed output value of a pin, use
+ * pio_get_output_data_status() instead.
+ *
+ * \param p_pio Pointer to a PIO instance.
+ * \param ul_type PIO type.
+ * \param ul_mask Bitmask of one or more pin(s) to configure.
+ *
+ * \retval 1 at least one PIO currently has a high level.
+ * \retval 0 all PIOs have a low level.
+ */
+uint32_t _pio_get(Pio *p_pio, const pio_type_t ul_type,
+        const uint32_t ul_mask)
+{
+	if (ul_type == PIO_INPUT){
+		if ((p_pio->PIO_PDSR & ul_mask) == 0){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+	}
+	else{
+		if ((p_pio->PIO_ODSR & ul_mask) == 0){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+	}
 }
 
 // Funcao de ligar o led
@@ -270,17 +305,17 @@ int main(void) {
   init();
 	
   while(1){
-	  if(!pio_get(BUT1_PIO, PIO_INPUT, BUT1_PIO_IDX_MASK)){
+	  if(!_pio_get(BUT1_PIO, PIO_INPUT, BUT1_PIO_IDX_MASK)){
 		  
 		  led_cycle(LED1_PIO, LED1_PIO_IDX_MASK, 100);
 		  
 	  }
-	  else if (!pio_get(BUT2_PIO, PIO_INPUT, BUT2_PIO_IDX_MASK)){
+	  else if (!_pio_get(BUT2_PIO, PIO_INPUT, BUT2_PIO_IDX_MASK)){
 		  
 		  led_cycle(LED2_PIO, LED2_PIO_IDX_MASK, 500);
 		  
 	  }
-	  else if (!pio_get(BUT3_PIO, PIO_INPUT, BUT3_PIO_IDX_MASK)){
+	  else if (!_pio_get(BUT3_PIO, PIO_INPUT, BUT3_PIO_IDX_MASK)){
 		  
 		  led_cycle(LED3_PIO, LED3_PIO_IDX_MASK, 1000);
 		  
