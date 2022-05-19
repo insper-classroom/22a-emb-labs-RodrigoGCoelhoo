@@ -314,7 +314,7 @@ void lv_termostato_infos(void){
 	lv_obj_align_to(label_graus1, label_temp, LV_ALIGN_OUT_RIGHT_TOP, 0, 0);
 	//lv_obj_set_style_text_font(label_graus1, &dseg20, LV_STATE_DEFAULT);
 	lv_obj_set_style_text_color(label_graus1, lv_color_white(), LV_STATE_DEFAULT);
-	lv_label_set_text_fmt(label_graus1, "ºC");
+	lv_label_set_text_fmt(label_graus1, "ï¿½C");
 }
 
 // void lc_image(){
@@ -336,6 +336,10 @@ static void task_lcd(void *pvParameters) {
 	lv_termostato_buttons();
 	lv_termostato_infos();
 	
+	//Condicional para implementar power_state
+	// if(power_state){
+	// 	lv_termostato_infos();
+	// }
 
 	for (;;)  {
 		lv_tick_inc(50);
@@ -483,7 +487,7 @@ int main(void) {
 	
 	xSemaphoreRTC = xSemaphoreCreateBinary();
 	if (xSemaphoreRTC == NULL)
-	printf("falha em criar o semaforo do botão da placa \n");
+	printf("falha em criar o semaforo do botï¿½o da placa \n");
 
 	/* Create task to control oled */
 	if (xTaskCreate(task_lcd, "LCD", TASK_LCD_STACK_SIZE, NULL, TASK_LCD_STACK_PRIORITY, NULL) != pdPASS) {
